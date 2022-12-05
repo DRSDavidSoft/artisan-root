@@ -39,12 +39,15 @@ catch (Throwable $e) {
 	if (!headers_sent())
 		header("Content-Type: text/plain", true, 500);
 
-	if ($is_cli)
-		$message = sprintf(chr(0x07) . "\e[91;1m%s\e[0m", $e->getMessage());
-	else
-		$message = sprintf("%s", $e->getMessage());
-
-	die($message);
+	if ($is_cli) {
+		$message = sprintf(chr(0x07) . "\e[91;1m%s\e[0m\n", $e->getMessage());
+		fwrite(STDERR, $message);
+		die(1);
+	}
+	else {
+		$message = sprintf("%s\n", $e->getMessage());
+		die($message);
+	}
 }
 finally {
 	chdir($original_cwd);
