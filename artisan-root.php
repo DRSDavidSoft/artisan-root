@@ -14,8 +14,16 @@ try {
 		if (empty($cwd) || empty($cwd == realpath($cwd)))
 			throw new Exception("Failed to detect the current working directory.");
 
-		if (file_exists('artisan'))
-			return require_once 'artisan';
+		if (file_exists('artisan') && !empty(filesize('artisan'))) {
+			while (($buffer = fgets(fopen('artisan', 'r'))) !== false) {
+				if (str_starts_with(trim($buffer), '#!/usr/bin/env php')) {
+					return require_once 'artisan';
+				}
+
+				break;
+			}
+
+		}
 
 		if (!empty($parentDir = realpath(dirname($cwd))) && $parentDir != $cwd)
 			$cwd = $parentDir;
