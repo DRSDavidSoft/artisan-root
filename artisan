@@ -1,6 +1,12 @@
 #!/bin/sh
 
-dir=$(cd "${0%[/\\]*}" > /dev/null; pwd)
+dir=$(dirname $(readlink -f "$0"))
+
+case "$(uname -sr)" in
+   CYGWIN*|MINGW*|MINGW32*|MSYS*)
+     dir=$(cd "${0%[/\\]*}" > /dev/null; pwd)
+     ;;
+esac
 
 if [ -d /proc/cygdrive ]; then
     case $(which php) in
