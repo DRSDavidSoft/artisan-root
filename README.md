@@ -31,5 +31,9 @@ This script works with both **bash** and **cmd.exe**.
 ### Demo
 <img src="docs/demo.png" />
 
+### Alternatives
+- **[artisan-anywhere](https://github.com/antonioribeiro/artisan-anywhere)**: A bash version of the same tool, by @antonioribeiro
+- [A small gist script](https://gist.github.com/jhoff/8fbe4116d74931751ecc9e8203dfb7c4?permalink_comment_id=4445619#gistcomment-4445619), by @sfinktah
+
 ### License
 Copyright <c> 2022 by David Refoua <David@Refoua.me>
