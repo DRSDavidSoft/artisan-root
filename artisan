@@ -1,20 +1,26 @@
 #!/bin/sh
 
+# Get the absolute path of the script directory
 dir=$(dirname $(readlink -f "$0"))
 
-case "$(uname -sr)" in
-   CYGWIN*|MINGW*|MINGW32*|MSYS*)
-     dir=$(cd "${0%[/\\]*}" > /dev/null; pwd)
-     ;;
-esac
+# Check the operating system type
+os=$(uname -sr)
 
-if [ -d /proc/cygdrive ]; then
-    case $(which php) in
-        $(readlink -n /proc/cygdrive)/*)
-            # We are in Cygwin using Windows php, so the path must be translated
-            dir=$(cygpath -m "$dir");
-            ;;
-    esac
+# If the operating system is Windows-based, use a different method to get the directory
+if [[ $os == CYGWIN* || $os == MINGW* || $os == MSYS* ]]; then
+    dir=$(cd "${0%[/\\]*}" > /dev/null; pwd)
 fi
 
+# If the /proc/cygdrive directory exists, check the PHP path
+if [ -d /proc/cygdrive ]; then
+    php_path=$(which php)
+    cygdrive_path=$(readlink -n /proc/cygdrive)
+
+    # If the PHP path starts with the cygdrive path, translate the directory to Windows format
+    if [[ $php_path == $cygdrive_path/* ]]; then
+        dir=$(cygpath -m "$dir");
+    fi
+fi
+
+# Run the PHP script with the given arguments
 php "${dir}/artisan-root.php" "$@"
